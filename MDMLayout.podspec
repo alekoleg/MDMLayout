@@ -1,5 +1,5 @@
 Pod::Spec.new do |s|
-  s.name         = "MDMLayoutExample"
+  s.name         = "MDMLayout"
   s.version      = "0.0.1"
   s.summary      = "Custom layout view controller"
   s.description  = "Custom layout view controller. Which can add view to hierarchy and remove from that animated"
