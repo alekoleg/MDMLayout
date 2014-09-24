@@ -72,6 +72,17 @@
 
 #pragma mark - Actions -
 
+- (void)setFooterView:(UIView *)footerView {
+    if (_footerView != footerView ) {
+        if (_footerView) {
+            [_footerView removeFromSuperview];
+        }
+        _footerView = footerView;
+        [self.contentView addSubview:_footerView];
+        [self layoutContentViewsAnimated:NO withPreAnimationBlock:NULL completeBlock:NULL];
+    }
+}
+
 - (void)textFieldBecomeResponder:(NSNotification *)not {
     UITextField *f = not.object;
     CGPoint point = [self.contentView convertPoint:f.frame.origin fromView:f];
@@ -94,7 +105,6 @@
         dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
             [weakScroll setContentOffset:CGPointMake(weakScroll.contentOffset.x, weakSelf.contentOffset) animated:YES];
         });
-
     }
 }
 
@@ -112,6 +122,11 @@
 
 
 #pragma mark - API -
+
+- (void)viewDidLayoutSubviews {
+    [super viewDidLayoutSubviews];
+    [self layoutContentViews];
+}
 
 - (void)layoutContentViews {
     [self layoutContentViewsAnimated:NO withPreAnimationBlock:NULL completeBlock:NULL];
@@ -148,6 +163,17 @@
                 offset += view.height;
             }
         }
+   
+        self.footerView.frame =  ({
+            CGRect frame = self.footerView.frame;
+            frame.origin.y = MAX((self.contentView.height - frame.size.height), offset);
+            frame;
+        });
+        
+        if (self.footerView) {
+            offset = self.footerView.bottom;
+        }
+        
         self.contentView.contentSize = CGSizeMake(self.view.width, offset);
     };
     

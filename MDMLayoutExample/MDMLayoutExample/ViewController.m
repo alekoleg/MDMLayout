@@ -20,6 +20,8 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     self.colors = @[ [UIColor redColor], [UIColor greenColor], [UIColor blackColor], [UIColor blueColor]];
+    
+    self.footerView = [self randomView];
 }
 
 - (UIView *)randomView {

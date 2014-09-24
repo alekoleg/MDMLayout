@@ -15,6 +15,10 @@ typedef void(^MDMLayoutAnimationBlock)(void);
 
 @property (nonatomic, readonly) UIScrollView *contentView;
 @property (nonatomic, readonly) NSMutableArray *contentViews;
+/**
+ *   Always shows at the bottom of the contentView
+ */
+@property (nonatomic, strong) UIView *footerView;
 
 /**
  *   Layout all views.
@@ -30,5 +34,7 @@ typedef void(^MDMLayoutAnimationBlock)(void);
 - (void)contentViewAddView:(UIView *)view;
 - (void)contentViewRemoveView:(UIView *)view;
 - (void)contentViewRemoveViews:(NSArray *)views;
+
+
 
 @end
