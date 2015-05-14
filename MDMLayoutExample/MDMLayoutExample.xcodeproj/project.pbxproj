@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		71E3ACEE4BBB48C5B9BE0F6B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 3C1D8FAFC1B94C32B3876C83 /* libPods.a */; };
+		B339EF8E1B05472D00214F65 /* UIView+MDMLayout.m in Sources */ = {isa = PBXBuildFile; fileRef = B339EF8D1B05472D00214F65 /* UIView+MDMLayout.m */; };
 		B36A149A19D1B144002C4AB5 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B36A149919D1B144002C4AB5 /* main.m */; };
 		B36A149D19D1B144002C4AB5 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B36A149C19D1B144002C4AB5 /* AppDelegate.m */; };
 		B36A14A019D1B144002C4AB5 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B36A149F19D1B144002C4AB5 /* ViewController.m */; };
@@ -30,6 +31,9 @@
 
 /* Begin PBXFileReference section */
 		3C1D8FAFC1B94C32B3876C83 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		B339EF8C1B05472D00214F65 /* UIView+MDMLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+MDMLayout.h"; sourceTree = "<group>"; };
+		B339EF8D1B05472D00214F65 /* UIView+MDMLayout.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+MDMLayout.m"; sourceTree = "<group>"; };
+		B339EF8F1B05522D00214F65 /* MDMLayout.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MDMLayout.h; sourceTree = "<group>"; };
 		B36A149419D1B144002C4AB5 /* MDMLayoutExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MDMLayoutExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B36A149819D1B144002C4AB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B36A149919D1B144002C4AB5 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -133,9 +137,12 @@
 		B36A14BD19D1B15B002C4AB5 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				B339EF8F1B05522D00214F65 /* MDMLayout.h */,
 				B36A14C119D1B385002C4AB5 /* MDMExpectedFrameProtocol.h */,
 				B36A14BE19D1B15B002C4AB5 /* MDMLayoutViewController.h */,
 				B36A14BF19D1B15B002C4AB5 /* MDMLayoutViewController.m */,
+				B339EF8C1B05472D00214F65 /* UIView+MDMLayout.h */,
+				B339EF8D1B05472D00214F65 /* UIView+MDMLayout.m */,
 			);
 			name = Classes;
 			path = ../../Classes;
@@ -286,6 +293,7 @@
 			files = (
 				B36A14C019D1B15B002C4AB5 /* MDMLayoutViewController.m in Sources */,
 				B36A14A019D1B144002C4AB5 /* ViewController.m in Sources */,
+				B339EF8E1B05472D00214F65 /* UIView+MDMLayout.m in Sources */,
 				B36A149D19D1B144002C4AB5 /* AppDelegate.m in Sources */,
 				B36A149A19D1B144002C4AB5 /* main.m in Sources */,
 			);

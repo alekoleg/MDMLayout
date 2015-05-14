@@ -11,7 +11,6 @@
 @protocol MDMExpectedFrameProtocol <NSObject>
 @optional
 
-- (CGRect)expectedFrame;
-- (void)updateLayoutAnimated:(BOOL)animated;
+- (void)mdm_updateLayoutAnimated:(BOOL)animated;
 
 @end

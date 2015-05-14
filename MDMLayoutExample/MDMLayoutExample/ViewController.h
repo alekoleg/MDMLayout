@@ -6,7 +6,7 @@
 //  Copyright (c) 2014 alekoleg. All rights reserved.
 //
 
-#import "MDMLayoutViewController.h"
+#import "MDMLayout.h"
 
 @interface ViewController : MDMLayoutViewController
 

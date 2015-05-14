@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "MDMLayout"
-  s.version      = "0.0.1"
+  s.version      = "0.0.2"
   s.summary      = "Custom layout view controller"
   s.description  = "Custom layout view controller. Which can add view to hierarchy and remove from that animated"
   s.homepage     = "https://github.com/alekoleg/MDMLayout.git"
@@ -13,6 +13,6 @@ Pod::Spec.new do |s|
   s.source_files = 'Classes/*.{h,m}'
   s.public_header_files = 'Classes/*.h'
   s.frameworks = 'Foundation', 'UIKit'
-  s.dependency 'ViewUtils'
+  s.dependency 'ViewUtils', '~> 1.1.2'
 
 end

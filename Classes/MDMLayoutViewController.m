@@ -8,11 +8,13 @@
 
 #import "MDMLayoutViewController.h"
 #import <ViewUtils.h>
+#import "UIView+MDMLayout.h"
 
 @interface MDMLayoutViewController () <UIScrollViewDelegate>
 @property (nonatomic, strong) NSMutableSet *toAddContent;
 @property (nonatomic, strong) NSMutableSet *toRemoveContent;
 @property (nonatomic) CGFloat contentOffset;
+@property (nonatomic, readonly) NSMutableArray *contentViews;
 @end
 
 
@@ -36,16 +38,11 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showKeyboard:) name:UIKeyboardWillShowNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideKeyboard:) name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldBecomeResponder:) name:UITextFieldTextDidBeginEditingNotification object:nil];
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
     [super viewDidDisappear:animated];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UITextFieldTextDidBeginEditingNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillHideNotification object:nil];
-    [[NSNotificationCenter defaultCenter] removeObserver:self name:UIKeyboardWillShowNotification object:nil];
+    [self unSubscribeForKeyboardNotifications];
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
@@ -79,6 +76,17 @@
         }
         _footerView = footerView;
         [self.contentView addSubview:_footerView];
+        [self layoutContentViewsAnimated:NO withPreAnimationBlock:NULL completeBlock:NULL];
+    }
+}
+
+- (void)setHeaderView:(UIView *)headerView {
+    if (_headerView != headerView) {
+        if (_headerView) {
+            [_headerView removeFromSuperview];
+        }
+        _headerView = headerView;
+        [self.contentView addSubview:_headerView];
         [self layoutContentViewsAnimated:NO withPreAnimationBlock:NULL completeBlock:NULL];
     }
 }
@@ -121,6 +129,42 @@
 }
 
 
+#pragma mark - Keyboard - 
+
+- (void)setEnableKeyboardObserving:(BOOL)enableKeyboardObserving {
+    _enableKeyboardObserving = enableKeyboardObserving;
+    if (_enableKeyboardObserving) {
+        [self subscribeForKeyboardNotifications];
+    } else {
+        [self unSubscribeForKeyboardNotifications];
+    }
+}
+
+- (void)subscribeForKeyboardNotifications {
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showKeyboard:) name:UIKeyboardWillShowNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(hideKeyboard:) name:UIKeyboardWillHideNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textFieldBecomeResponder:) name:UITextFieldTextDidBeginEditingNotification object:nil];
+}
+
+- (void)unSubscribeForKeyboardNotifications {
+    [[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+
+
+#pragma mark - Variables -
+
+- (void)setLeftMargin:(CGFloat)leftMargin {
+    _leftMargin = leftMargin;
+    [self.view setNeedsLayout];
+}
+
+- (void)setRightMargin:(CGFloat)rightMargin {
+    _rightMargin = rightMargin;
+    [self.view setNeedsLayout];
+}
+
+
 #pragma mark - API -
 
 - (void)viewDidLayoutSubviews {
@@ -130,6 +174,10 @@
 
 - (void)layoutContentViews {
     [self layoutContentViewsAnimated:NO withPreAnimationBlock:NULL completeBlock:NULL];
+}
+
+- (void)layoutContentViewsWithAnimation {
+    [self layoutContentViewsAnimated:YES withPreAnimationBlock:NULL completeBlock:NULL];
 }
 
 - (void)layoutContentViewsAnimated:(BOOL)animated withPreAnimationBlock:(MDMLayoutAnimationBlock)preBlock completeBlock:(MDMLayoutAnimationBlock)complete {
@@ -146,29 +194,46 @@
         if (preBlock) {
             preBlock();
         }
+        
+        void (^layouBlock)(UIView *view, CGFloat offset) = ^(UIView *view, CGFloat offset) {
+            view.frame = ({
+                CGRect frame = view.frame;
+                frame.origin.y = offset + view.mdm_expectedTopOffset;
+                frame.origin.x = self.leftMargin + view.mdm_expectedLeftOffset;
+                if (view.mdm_shouldStretchViewToFillWidth) {
+                    frame.size.width = self.contentView.width - self.rightMargin - self.leftMargin - view.mdm_expectedLeftOffset - view.mdm_expectedRightOffset;
+                } else {
+                    frame.size.width = view.mdm_expectedWidth - view.mdm_expectedRightOffset - view.mdm_expectedLeftOffset;
+                }
+                frame.size.height = view.mdm_expectedHeigth;
+                frame;
+            });
+        };
+        
         float offset = 0;
+        
+        if (self.headerView) {
+            layouBlock(self.headerView, offset);
+            offset += self.headerView.bottom;
+        }
+        
         for (UIView *view in self.contentViews) {
             if ([self.toRemoveContent containsObject:view]) {
                 [self.contentView sendSubviewToBack:view];
                 view.top = -view.height;
             } else {
-                view.top = offset;
-                if ([view respondsToSelector:@selector(expectedFrame)]) {
-                    CGRect frame = [(id <MDMExpectedFrameProtocol>)view expectedFrame];
-                    view.height = ceil(frame.size.height);
+                
+                layouBlock(view, offset);
+                
+                if ([view respondsToSelector:@selector(mdm_updateLayoutAnimated:)]) {
+                    [(id <MDMExpectedFrameProtocol>)view mdm_updateLayoutAnimated:animated];
                 }
-                if ([view respondsToSelector:@selector(updateLayoutAnimated:)]) {
-                    [(id <MDMExpectedFrameProtocol>)view updateLayoutAnimated:animated];
-                }
-                offset += view.height;
+                offset += view.bottom;
             }
         }
    
-        self.footerView.frame =  ({
-            CGRect frame = self.footerView.frame;
-            frame.origin.y = MAX((self.contentView.height - frame.size.height), offset);
-            frame;
-        });
+        CGFloat footerY = MAX((self.contentView.height - self.footerView.mdm_expectedHeigth), offset);
+        layouBlock(self.footerView, footerY);
         
         if (self.footerView) {
             offset = self.footerView.bottom;
@@ -192,6 +257,12 @@
     } else {
         animationBlock();
         completeBlock(YES);
+    }
+}
+
+- (void)contentViewAddViews:(NSArray *)views {
+    for (UIView *view in views) {
+        [self contentViewAddView:view];
     }
 }
 

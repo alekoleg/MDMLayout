@@ -30,18 +30,18 @@
     return view;
 }
 
-- (IBAction)addView:(id)sender {
-    UIView *view = [self randomView];
-    NSInteger index = (self.contentViews.count > 0) ? arc4random() % self.contentViews.count : 0;
-    [self contentViewInsertView:view atIndex:index];
-    [self layoutContentViewsAnimated:YES withPreAnimationBlock:NULL completeBlock:NULL];
-}
-
-- (IBAction)removeView:(id)sender {
-    UIView *view = self.contentViews[arc4random() % self.contentViews.count];
-    [self contentViewRemoveView:view];
-    [self layoutContentViewsAnimated:YES withPreAnimationBlock:NULL completeBlock:NULL];
-}
+//- (IBAction)addView:(id)sender {
+//    UIView *view = [self randomView];
+//    NSInteger index = (self.contentViews.count > 0) ? arc4random() % self.contentViews.count : 0;
+//    [self contentViewInsertView:view atIndex:index];
+//    [self layoutContentViewsAnimated:YES withPreAnimationBlock:NULL completeBlock:NULL];
+//}
+//
+//- (IBAction)removeView:(id)sender {
+//    UIView *view = self.contentViews[arc4random() % self.contentViews.count];
+//    [self contentViewRemoveView:view];
+//    [self layoutContentViewsAnimated:YES withPreAnimationBlock:NULL completeBlock:NULL];
+//}
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
