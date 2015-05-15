@@ -228,7 +228,7 @@
                 if ([view respondsToSelector:@selector(mdm_updateLayoutAnimated:)]) {
                     [(id <MDMExpectedFrameProtocol>)view mdm_updateLayoutAnimated:animated];
                 }
-                offset += view.bottom;
+                offset = view.bottom;
             }
         }
    
