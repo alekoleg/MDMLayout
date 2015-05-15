@@ -25,7 +25,7 @@
 }
 
 - (void)setMdm_expectedWidth:(CGFloat)mdm_expectedWidth {
-    objc_setAssociatedObject(self, @selector(mdm_expectedHeigth), @(mdm_expectedWidth), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+    objc_setAssociatedObject(self, @selector(mdm_expectedWidth), @(mdm_expectedWidth), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }
 
 - (CGFloat)mdm_expectedWidth {
