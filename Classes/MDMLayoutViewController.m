@@ -303,6 +303,18 @@
     [self.toAddContent addObject:view];
 }
 
+- (void)contentViewRemoveAllViews {
+    [self contentViewRemoveAllViewsExeptViews:nil];
+}
+
+- (void)contentViewRemoveAllViewsExeptViews:(NSArray *)exeptViews {
+    NSSet * set = [NSSet setWithArray:exeptViews];
+    [self.contentViews enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if (![set containsObject:obj]) {
+            [self contentViewRemoveView:obj];
+        }
+    }];
+}
 
 
 

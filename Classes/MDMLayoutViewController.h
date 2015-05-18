@@ -52,6 +52,7 @@ typedef void(^MDMLayoutAnimationBlock)(void);
 - (void)contentViewRemoveView:(UIView *)view;
 - (void)contentViewRemoveViews:(NSArray *)views;
 
-
+- (void)contentViewRemoveAllViews;
+- (void)contentViewRemoveAllViewsExeptViews:(NSArray *)exeptViews;
 
 @end

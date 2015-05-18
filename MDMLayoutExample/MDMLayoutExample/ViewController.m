@@ -22,6 +22,8 @@
     self.colors = @[ [UIColor redColor], [UIColor greenColor], [UIColor blackColor], [UIColor blueColor]];
     
     self.footerView = [self randomView];
+    self.contentView.showsHorizontalScrollIndicator = NO;
+    self.contentView.showsVerticalScrollIndicator = NO;
 }
 
 - (UIView *)randomView {
@@ -30,18 +32,25 @@
     return view;
 }
 
-//- (IBAction)addView:(id)sender {
-//    UIView *view = [self randomView];
-//    NSInteger index = (self.contentViews.count > 0) ? arc4random() % self.contentViews.count : 0;
-//    [self contentViewInsertView:view atIndex:index];
-//    [self layoutContentViewsAnimated:YES withPreAnimationBlock:NULL completeBlock:NULL];
-//}
+- (IBAction)addView:(id)sender {
+    UIView *view = [self randomView];
+    NSInteger index = (self.contentView.subviews.count > 0) ? arc4random() % self.contentView.subviews.count : 0;
+    [self contentViewInsertView:view atIndex:index];
+    [self layoutContentViewsAnimated:YES withPreAnimationBlock:NULL completeBlock:NULL];
+}
 //
-//- (IBAction)removeView:(id)sender {
-//    UIView *view = self.contentViews[arc4random() % self.contentViews.count];
+- (IBAction)removeView:(id)sender {
+    UIView *view = self.contentView.subviews[arc4random() % self.contentView.subviews.count];
 //    [self contentViewRemoveView:view];
-//    [self layoutContentViewsAnimated:YES withPreAnimationBlock:NULL completeBlock:NULL];
-//}
+    [self contentViewRemoveAllViewsExeptViews:@[view]];
+//    [self contentViewRemoveAllViews];
+    [self layoutContentViewsAnimated:YES withPreAnimationBlock:NULL completeBlock:NULL];
+
+}
+
+
+
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
