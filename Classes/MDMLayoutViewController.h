@@ -43,8 +43,12 @@ typedef void(^MDMLayoutAnimationBlock)(void);
  *   After contentViews update you must call layoutContentViews to properly position views
  */
 - (void)contentViewInsertView:(UIView *)view atIndex:(NSInteger)index;
+- (void)contentViewInsertView:(UIView *)view aboveView:(UIView *)relativeView;
+- (void)contentViewInsertView:(UIView *)view belowView:(UIView *)relativeView;
+
 - (void)contentViewAddView:(UIView *)view;
 - (void)contentViewAddViews:(NSArray *)views;
+
 - (void)contentViewRemoveView:(UIView *)view;
 - (void)contentViewRemoveViews:(NSArray *)views;
 

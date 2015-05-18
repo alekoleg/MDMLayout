@@ -283,6 +283,25 @@
     [self.toAddContent addObject:view];
 }
 
+- (void)contentViewInsertView:(UIView *)view aboveView:(UIView *)relativeView {
+    NSInteger index = [self.contentViews indexOfObject:relativeView];
+    if (index == NSNotFound) {
+        [self.contentViews addObject:view];
+    } else {
+        [self.contentViews insertObject:view atIndex:index];
+    }
+    [self.toAddContent addObject:view];
+}
+
+- (void)contentViewInsertView:(UIView *)view belowView:(UIView *)relativeView {
+    NSInteger index = [self.contentViews indexOfObject:relativeView];
+    if (index == NSNotFound) {
+        [self.contentViews addObject:view];
+    } else {
+        [self.contentViews insertObject:view atIndex:index + 1];
+    }
+    [self.toAddContent addObject:view];
+}
 
 
 
