@@ -223,7 +223,7 @@
                 [self.contentView sendSubviewToBack:view];
                 view.top = -view.height;
                 view.alpha = 0.0;
-            } else {
+            } else if (view.hidden == NO) {
                 view.alpha = 1.0;
                 layouBlock(view, offset);
                 
