@@ -186,11 +186,11 @@
         view.alpha = 0.0;
         [self.contentView addSubview:view];
     }
-
+    
     [self.contentViews enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [self.contentView bringSubviewToFront:obj];
     }];
-
+    
     void (^animationBlock) (void) = ^{
         if (preBlock) {
             preBlock();
@@ -223,7 +223,7 @@
                 [self.contentView sendSubviewToBack:view];
                 view.top = -view.height;
                 view.alpha = 0.0;
-            } else if (view.hidden == NO) {
+            } else {
                 view.alpha = 1.0;
                 layouBlock(view, offset);
                 
@@ -233,7 +233,7 @@
                 offset = view.bottom;
             }
         }
-   
+        
         CGFloat footerY = MAX((self.contentView.height - self.footerView.mdm_expectedHeigth), offset);
         layouBlock(self.footerView, footerY);
         
@@ -273,36 +273,49 @@
 }
 
 - (void)contentViewRemoveView:(UIView *)view {
-    [self.toRemoveContent addObject:view];
+    
+    [self contentViewRemoveViews:@[view]];
 }
 
 - (void)contentViewRemoveViews:(NSArray *)views {
+    for (UIView *view in views) {
+        [self.toAddContent removeObject:view];
+    }
     [self.toRemoveContent addObjectsFromArray:views];
 }
 
 - (void)contentViewInsertView:(UIView *)view atIndex:(NSInteger)index {
-    [self.contentViews insertObject:view atIndex:index];
-    [self.toAddContent addObject:view];
+    NSInteger idx = [self.contentViews indexOfObject:view];
+    if (idx != NSNotFound) {
+        if (idx < index) {
+            index -= 1;
+        }
+        [self.contentViews removeObject:view];
+        [self.contentViews insertObject:view atIndex:index];
+    } else {
+        [self.contentViews insertObject:view atIndex:index];
+        [self.toAddContent addObject:view];
+    }
+    
+    [self.toRemoveContent removeObject:view];
 }
 
 - (void)contentViewInsertView:(UIView *)view aboveView:(UIView *)relativeView {
     NSInteger index = [self.contentViews indexOfObject:relativeView];
     if (index == NSNotFound) {
-        [self.contentViews addObject:view];
-    } else {
-        [self.contentViews insertObject:view atIndex:index];
+        index = self.contentViews.count;
     }
-    [self.toAddContent addObject:view];
+    [self contentViewInsertView:view atIndex:index];
 }
 
 - (void)contentViewInsertView:(UIView *)view belowView:(UIView *)relativeView {
     NSInteger index = [self.contentViews indexOfObject:relativeView];
     if (index == NSNotFound) {
-        [self.contentViews addObject:view];
+        index = self.contentViews.count;
     } else {
-        [self.contentViews insertObject:view atIndex:index + 1];
+        index += 1;
     }
-    [self.toAddContent addObject:view];
+    [self contentViewInsertView:view atIndex:index];
 }
 
 - (void)contentViewRemoveAllViews {
