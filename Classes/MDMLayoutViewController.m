@@ -186,11 +186,11 @@
         view.alpha = 0.0;
         [self.contentView addSubview:view];
     }
-    
-    [self.toAddContent enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(UIView * obj, BOOL *stop) {
+
+    [self.contentViews enumerateObjectsWithOptions:NSEnumerationReverse usingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
         [self.contentView bringSubviewToFront:obj];
     }];
-    
+
     void (^animationBlock) (void) = ^{
         if (preBlock) {
             preBlock();
