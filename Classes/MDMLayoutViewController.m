@@ -183,6 +183,7 @@
 - (void)layoutContentViewsAnimated:(BOOL)animated withPreAnimationBlock:(MDMLayoutAnimationBlock)preBlock completeBlock:(MDMLayoutAnimationBlock)complete {
     
     for (UIView *view in self.toAddContent) {
+        view.alpha = 0.0;
         [self.contentView addSubview:view];
     }
     
@@ -221,8 +222,9 @@
             if ([self.toRemoveContent containsObject:view]) {
                 [self.contentView sendSubviewToBack:view];
                 view.top = -view.height;
+                view.alpha = 0.0;
             } else {
-                
+                view.alpha = 1.0;
                 layouBlock(view, offset);
                 
                 if ([view respondsToSelector:@selector(mdm_updateLayoutAnimated:)]) {
@@ -316,6 +318,10 @@
     }];
 }
 
-
+- (void)relayoutContentViews {
+    self.toAddContent = [self.contentView.subviews mutableCopy];
+    [self.toAddContent makeObjectsPerformSelector:@selector(removeFromSuperview)];
+    [self layoutContentViews];
+}
 
 @end
