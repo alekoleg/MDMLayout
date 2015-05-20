@@ -20,14 +20,32 @@
 
 @implementation MDMLayoutViewController
 
+- (instancetype)init {
+    if (self = [super init]) {
+        [self setupCommon];
+    }
+    return self;
+}
+
+- (instancetype)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil {
+    if (self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil]) {
+        [self setupCommon];
+    }
+    return self;
+}
+
+- (id)initWithCoder:(NSCoder *)aDecoder {
+    if (self = [super initWithCoder:aDecoder]) {
+        [self setupCommon];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
     self.edgesForExtendedLayout = UIRectEdgeNone;
 
-    _toAddContent = [NSMutableSet set];
-    _toRemoveContent = [NSMutableSet set];
-    _contentViews = [NSMutableArray array];
 
     [self setupContentView];
     self.view.backgroundColor = [UIColor whiteColor];
@@ -55,6 +73,19 @@
 }
 
 #pragma mark - Setup -
+
+- (void)setupCommon {
+    if (!_toAddContent) {
+        _toAddContent = [NSMutableSet set];
+    }
+    if (!_toRemoveContent) {
+        _toRemoveContent = [NSMutableSet set];
+    }
+
+    if (!_contentView) {
+        _contentViews = [NSMutableArray array];
+    }
+}
 
 - (void)setupContentView {
     if (!_contentView) {
