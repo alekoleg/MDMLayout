@@ -34,6 +34,7 @@
 
 - (IBAction)addView:(id)sender {
     UIView *view = [self randomView];
+    view.mdm_expectedBottomOffset = 10;
     NSInteger index = (self.contentView.subviews.count > 0) ? arc4random() % self.contentView.subviews.count : 0;
     [self contentViewInsertView:view atIndex:index];
     [self layoutContentViewsAnimated:YES withPreAnimationBlock:NULL completeBlock:NULL];

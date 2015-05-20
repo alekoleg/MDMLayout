@@ -61,6 +61,14 @@
     return [objc_getAssociatedObject(self, @selector(mdm_expectedRightOffset)) floatValue];
 }
 
+- (void)setMdm_expectedBottomOffset:(CGFloat)mdm_expectedBottomOffset {
+    objc_setAssociatedObject(self, @selector(mdm_expectedBottomOffset), @(mdm_expectedBottomOffset), OBJC_ASSOCIATION_COPY_NONATOMIC);
+}
+
+- (CGFloat)mdm_expectedBottomOffset {
+    return [objc_getAssociatedObject(self, @selector(mdm_expectedBottomOffset)) floatValue];
+}
+
 - (void)setMdm_shouldStretchViewToFillWidth:(BOOL)mdm_shouldStretchViewToFillWidth {
     objc_setAssociatedObject(self, @selector(mdm_shouldStretchViewToFillWidth), @(mdm_shouldStretchViewToFillWidth), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 }

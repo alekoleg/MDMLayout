@@ -16,6 +16,7 @@
 @property (nonatomic, assign) CGFloat mdm_expectedTopOffset;
 @property (nonatomic, assign) CGFloat mdm_expectedLeftOffset;
 @property (nonatomic, assign) CGFloat mdm_expectedRightOffset;
+@property (nonatomic, assign) CGFloat mdm_expectedBottomOffset;
 
 @property (nonatomic, assign) BOOL mdm_shouldStretchViewToFillWidth;
 
