@@ -56,6 +56,9 @@
 
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
+    if (self.enableKeyboardObserving) {
+        [self subscribeForKeyboardNotifications];
+    }
 }
 
 - (void)viewDidDisappear:(BOOL)animated {
