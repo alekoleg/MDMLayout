@@ -215,8 +215,21 @@
 }
 
 - (void)layoutContentViewsAnimated:(BOOL)animated withPreAnimationBlock:(MDMLayoutAnimationBlock)preBlock completeBlock:(MDMLayoutAnimationBlock)complete {
+    if (self.contentView == nil) {
+        return;
+    }
     
-    for (UIView *view in self.toAddContent) {
+    //copy to be save
+    
+    NSSet *copy_toAddContent = [self.toAddContent copy];
+    NSSet *copy_toRemove = [self.toRemoveContent copy];
+    
+    //clear
+    [self.toAddContent removeAllObjects];
+    [self.toRemoveContent removeAllObjects];
+    
+    
+    for (UIView *view in copy_toAddContent) {
         view.alpha = 0.0;
         [self.contentView addSubview:view];
     }
@@ -225,11 +238,26 @@
         [self.contentView bringSubviewToFront:obj];
     }];
     
+    
+    //pre caulculate start animation position for added views
+    if (animated) {
+        __block float offset = self.headerView.height;
+        
+        [self.contentViews enumerateObjectsUsingBlock:^(UIView * obj, NSUInteger idx, BOOL *stop) {
+            if ([copy_toAddContent containsObject:obj]) {
+                obj.top = offset - (obj.mdm_expectedHeigth / 2);
+            }
+            offset += (obj.mdm_expectedTopOffset + obj.mdm_expectedHeigth + obj.mdm_expectedBottomOffset);
+        }];
+    }
+    
+    
     void (^animationBlock) (void) = ^{
         if (preBlock) {
             preBlock();
         }
         
+        //layout
         void (^layouBlock)(UIView *view, CGFloat offset) = ^(UIView *view, CGFloat offset) {
             view.frame = ({
                 CGRect frame = view.frame;
@@ -245,6 +273,8 @@
             });
         };
         
+        
+        //interaction
         float offset = 0;
         
         if (self.headerView) {
@@ -253,11 +283,11 @@
         }
         
         for (UIView *view in self.contentViews) {
-            if ([self.toRemoveContent containsObject:view]) {
+            if ([copy_toRemove containsObject:view]) {
                 [self.contentView sendSubviewToBack:view];
-                view.top = -view.height;
+                view.top -= (view.height / 2);
                 view.alpha = 0.0;
-            } else {
+            } else if (view.hidden == NO) {
                 view.alpha = 1.0;
                 layouBlock(view, offset);
                 
@@ -276,13 +306,12 @@
         }
         
         self.contentView.contentSize = CGSizeMake(self.view.width, offset);
+        
+        [_contentViews removeObjectsInArray:[copy_toRemove allObjects]];
     };
     
     void (^completeBlock) (BOOL) = ^(BOOL flag){
-        [_toAddContent removeAllObjects];
-        [_contentViews removeObjectsInArray:[_toRemoveContent allObjects]];
-        [_toRemoveContent makeObjectsPerformSelector:@selector(removeFromSuperview)];
-        [_toRemoveContent removeAllObjects];
+        [copy_toRemove makeObjectsPerformSelector:@selector(removeFromSuperview)];
         if (complete) {
             complete();
         }
