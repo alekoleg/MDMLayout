@@ -311,7 +311,14 @@
     };
     
     void (^completeBlock) (BOOL) = ^(BOOL flag){
-        [copy_toRemove makeObjectsPerformSelector:@selector(removeFromSuperview)];
+        //for performance
+        NSSet *set = [NSSet setWithArray:self.contentViews];
+        [copy_toRemove enumerateObjectsUsingBlock:^(id obj, BOOL *stop) {
+            if (![set containsObject:obj]) {
+                [obj removeFromSuperview];
+            }
+        }];
+        
         if (complete) {
             complete();
         }
